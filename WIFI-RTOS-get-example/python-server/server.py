@@ -8,34 +8,117 @@ todos = {}
 
 dispositivos = {}
 
-class HelloWorld(Resource):
+class recebe(Resource):
 	def get(self):
-		print(request.remote_addr)
-		print(request.data)
-		print(request.args)
-		print(request.form)
-		print(request.files)
-		print(request.values)
-		# if (request.remote_addr) not in dispositivos:
-		# 	dispositivos[request.remote_addr] = {}
+		global agua, cafe, digital, sdigital
+		data = "D: 0"
+		if (request.args.get("Agua")):
+			agua = request.args.get("Agua")
+			agua = int(agua)
+		
+		else:
+			agua = 0
 
-		# print(dispositivos)
-		return {'hello': 'world'}
+		if (request.args.get("Cafe")):
+			cafe = request.args.get("Cafe")
+			cafe = int(cafe)
+		
+		else:
+			cafe = 0
+		if (request.args.get("Digital")):
+			digital = request.args.get("Digital")
+			digital = int(digital)
+		else:
+			digital = 0
 
-	def put(self):
-		return {'hello': 'world'}
+		if digital == 0:
+			sdigital = "Botão não foi pressionado"
+		else:
+			sdigital = "Botão foi pressionado"
+		
+		# print(request.data)
+		# print(request.time)
+		# r='REceieve'
+		# clientsocket.send(r.encode())
+		if digital == 1: # tem cafe e agua:
+			data = "D: 1"
+		return data
 
-#class TodoSimple(Resource):
-#	def get(self, todo_id):
-#		return {todo_id: todos[todo_id]}
-#
-#	def put(self, todo_id):
-#		todos[todo_id] = request.form['data']
-#		return {todo_id: todos[todo_id]}
+	def post(self):
+		return 1
 
-#api.add_resource(TodoSimple, '/<string:todo_id>')
-api.add_resource(HelloWorld, '/')
 
+api.add_resource(recebe, '/')
+global ButtonPressed
+ButtonPressed = 0;      
+
+
+
+class cafe(Resource):
+	def get(self):
+		return "get"
+
+	def post(self):
+		return "post"
+
+
+api.add_resource(cafe, '/cafe')
+
+@app.route('/show')
+
+def show():
+
+   return '''
+   	<html>
+   		<body>
+			<div class="container">
+    			<form method="post" action="/cafe"> 
+        			<input type="submit" value="Faz Café" >
+    			</form>
+ 			</div>
+         	<h1> Agua: {0} <h1>
+   			<h1> Cafe: {1} <h1>
+   			<h1>  {2} <h1>
+    	</body>
+	</html>
+  
+	
+   '''.format(agua, cafe, sdigital)
+
+
+
+
+
+
+
+# class show(Resource):
+# 	def get(self):
+# 		# return '''
+# 		#    	<html>
+# 		#    		<body>
+# 		# 			<div class="container">
+# 		#     			<form method="post"> 
+# 		#         			<input type="submit" value="Faz Café" >
+# 		#     			</form>
+# 		#  			</div>
+# 		#          	<h1> Agua: {0} <h1>
+# 		#    			<h1> Cafe: {1} <h1>
+# 		#    			<h1>  {2} <h1>
+# 		#     	</body>
+# 		# 	</html>
+		  
+			
+# 		#    '''.format(agua, cafe, sdigital)
+# 		return "<h1>oi<h1>"
+# 	def post(self):
+# 		return 1
+
+
+# api.add_resource(show, '/show')
+# @app.route('/python')
+
+# def hello_python():
+#    return 'Hello Python'
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',debug=True)
 	#app.run(debug=True)
